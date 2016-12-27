@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# -*- mode: bash; tab-width: 2; -*-
+# vim: ts=2 sw=2 ft=bash noet
+
+# exit if anything fails
+set -e
+
+# source the Nos framework
+. /opt/nanobox/nos/common.sh
+
+# initialize Nos with the original arguments
+nos_init "$@"
+
+# source common lib
+. ${engine_lib_dir}/static.sh
+
+# install nginx
+install_runtime_packages
+
+# configure nginx
+configure_nginx
+
+exit 0
