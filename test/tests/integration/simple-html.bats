@@ -103,7 +103,7 @@ setup() {
   expected="Hello World!"
 
   # kill the server
-  kill -9 $pid > /dev/null 2>&1
+  kill $pid > /dev/null 2>&1
 
   [ "$output" = "$expected" ]
 }
