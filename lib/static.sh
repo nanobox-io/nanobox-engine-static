@@ -24,13 +24,36 @@ rel_dir() {
 	echo $(nos_validate "$(nos_payload "config_rel_dir")" "string" "public")
 }
 
+expires() {
+  declare -a expires_list
+  if [[ "${PL_config_expires_type}" = "map" ]]; then
+    for i in ${PL_config_expires_nodes}; do
+      type=PL_config_expires_${i}_type
+      if [[ ${!type} = "string" || ${type} = "int" ]]; then
+        extension=${i}
+        duration=PL_config_expires_${i}_value
+        if [[ -n ${extension} && -n ${!duration} ]]; then
+          entry="{\"extension\":\"${extension}\",\"duration\":\"${!duration}\"}"
+          expires_list+=("${entry}")
+        fi
+      fi
+    done
+  fi
+  if [[ -z "expires_list[@]" ]]; then
+    echo "[]"
+  else
+    echo "[ $(nos_join ',' "${expires_list[@]}") ]"
+  fi
+}
+
 # Generate a payload to render the nginx conf
 nginx_conf_payload() {
   cat <<-END
 {
   "code_dir": "$(nos_code_dir)",
   "data_dir": "$(nos_data_dir)",
-  "force_https": $(force_https)
+  "force_https": $(force_https),
+  "expires": $(expires)
 }
 END
 }
