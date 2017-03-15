@@ -22,6 +22,11 @@ run.config:
     
     # rel_dir (directory to serve up)
     rel_dir: public
+    
+    # static asset expiration
+    expires:
+      extension: jpg|jpeg|png|gif|ico|css|js
+      duration: 365d
 ```
 
 ## Generic Usage
