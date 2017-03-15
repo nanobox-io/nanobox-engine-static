@@ -26,14 +26,14 @@ rel_dir() {
 
 expires() {
   declare -a expires_list
-  if [[ "${PL_config_expires_type}" = "map" ]]; then
-    for i in ${PL_config_expires_nodes}; do
+  if [[ "${PL_config_expires_type}" = "array" ]]; then
+    for ((i=0; i < PL_config_expires_length ; i++)); do
       type=PL_config_expires_${i}_type
-      if [[ ${!type} = "string" || ${type} = "int" ]]; then
-        extension=${i}
-        duration=PL_config_expires_${i}_value
-        if [[ -n ${extension} && -n ${!duration} ]]; then
-          entry="{\"extension\":\"${extension}\",\"duration\":\"${!duration}\"}"
+      if [[ ${!type} = "map" ]]; then
+        extension=PL_config_expires_${i}_extension_value
+        duration=PL_config_expires_${i}_duration_value
+        if [[ -n ${!extension} && -n ${!duration} ]]; then
+          entry="{\"extension\":\"${!extension}\",\"duration\":\"${!duration}\"}"
           expires_list+=("${entry}")
         fi
       fi
