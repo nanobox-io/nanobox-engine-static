@@ -17,7 +17,7 @@ nos_init "$@"
 . ${engine_lib_dir}/static.sh
 
 # if there is a web in the boxfile, don't add another
-if [ $( grep 'web\.' $(nos_code_dir)/boxfile.yml) ]; then
+if [ $( grep '^web\.' $(nos_code_dir)/boxfile.yml ) ]; then
 	exit 0
 fi
 
