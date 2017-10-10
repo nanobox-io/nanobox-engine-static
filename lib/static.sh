@@ -24,13 +24,37 @@ rel_dir() {
 	echo $(nos_validate "$(nos_payload "config_rel_dir")" "string" "public")
 }
 
+# configurable error pages
+error_pages() {
+  declare -a error_pages_list
+  if [[ "${PL_config_error_pages_type}" = "array" ]]; then
+    for ((i=0; i < PL_config_error_pages_length ; i++)); do
+      type=PL_config_error_pages_${i}_type
+      if [[ ${!type} = "map" ]]; then
+        errors=PL_config_error_pages_${i}_errors_value
+        page=PL_config_error_pages_${i}_page_value
+        if [[ -n ${!errors} && ${!page} ]]; then
+          entry="{\"errors\":\"${!errors}\",\"page\":\"${!page}\"}"
+          error_pages_list+=("${entry}")
+        fi
+      fi
+    done
+  fi
+  if [[ -z "error_pages_list[@]" ]]; then
+    echo "[]"
+  else
+    echo "[ $(nos_join ',' "${error_pages_list[@]}") ]"
+  fi
+}
+
 # Generate a payload to render the nginx conf
 nginx_conf_payload() {
   cat <<-END
 {
   "code_dir": "$(nos_code_dir)",
   "data_dir": "$(nos_data_dir)",
-  "force_https": $(force_https)
+  "force_https": $(force_https),
+  "error_pages": $(error_pages)
 }
 END
 }
