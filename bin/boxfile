@@ -7,6 +7,20 @@
 # exit if anything fails
 set -e
 
+# source the Nos framework
+. /opt/nanobox/nos/common.sh
+
+# initialize Nos with the original arguments
+nos_init "$@"
+
+# source common lib
+. ${engine_lib_dir}/static.sh
+
+# if there is a web in the boxfile, don't add another
+if [ $( grep '^web\.' $(nos_code_dir)/boxfile.yml ) ]; then
+	exit 0
+fi
+
 cat <<END
 web.site:
   start: nginx
